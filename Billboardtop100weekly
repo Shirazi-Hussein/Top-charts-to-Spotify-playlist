@@ -1,0 +1,5 @@
+#billboard charts api (https://github.com/guoguo12/billboard-charts)
+import billboard
+
+#grab current top 100 chart
+chart = billboard.ChartData('hot-100')
