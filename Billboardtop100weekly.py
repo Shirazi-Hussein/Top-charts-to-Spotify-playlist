@@ -26,10 +26,14 @@ def spotify_search():
     chart = chartdata()
     track_list = []
     #find a way to get track IDS
-    for track in chart[:10]:
-        results = sp.search(q='artist:' + track[1] + ' track:' + track[0],
-                                 type='track')
-        print(results)
+    for track in chart[1:2]:
+        searchQuery = track[0] + ' ' + track[1]
+        searchResults = sp.search(q=searchQuery, limit=1, type='track', market="US")
+# =============================================================================
+#         results = sp.search(q='artist:' + track[1] + ' track:' + track[0],
+#                                  type='track', limit=1)
+# =============================================================================
+        print(searchResults)
 
 
 spotify_search()
