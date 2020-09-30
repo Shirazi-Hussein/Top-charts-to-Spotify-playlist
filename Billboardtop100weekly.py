@@ -1,14 +1,20 @@
 #billboard charts api (https://github.com/guoguo12/billboard-charts), and 
 #spotipy (https://spotipy.readthedocs.io/en/latest/)
 
+from config import CLIENT_ID, CLIENT_SECRET
 import billboard
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
-from config import CLIENT_ID, CLIENT_SECRET
+from spotipy.oauth2 import SpotifyOAuth
 
-client_credentials_manager = SpotifyClientCredentials(CLIENT_ID, CLIENT_SECRET)
-sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
+# credentials
+def credentials():
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(username='truetiming',
+                                                   client_id=CLIENT_ID,
+                                                   client_secret=CLIENT_SECRET, 
+                                                   redirect_uri='http://localhost:8888/callback',
+                                                   scope='playlist-modify playlist-modify-public'))
+    return sp
+    
 def chartdata():
     """Creates easily traversible chart list"""
     chart = billboard.ChartData('hot-100')
@@ -20,9 +26,9 @@ def chartdata():
     return chart_data
 
 
-def spotify_search():
+def spotify_tracklist():
     """returns track ids for each song"""
-    scope = 'playlist-modify-private'
+    sp = credentials()
     chart = chartdata()
     trackid_list = []
     #find a way to get track IDS
@@ -32,4 +38,13 @@ def spotify_search():
         trackid_list.append(searchResults['tracks']['items'][0]['uri'])
     return trackid_list
 
-spotify_search()
+def create_playlist():
+    sp = credentials()
+    sp.user_playlist_create('truetiming', name='Billboard Hot 100')
+    
+def add_tracks():
+    sp = credentials()
+    tracks = spotify_tracklist()
+    for track in tracks:
+        sp.user_playlist_add_tracks('truetiming', playlist_id=playlist,
+                                    tracks=track)
