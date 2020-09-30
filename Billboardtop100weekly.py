@@ -24,16 +24,12 @@ def spotify_search():
     """returns track ids for each song"""
     scope = 'playlist-modify-private'
     chart = chartdata()
-    track_list = []
+    trackid_list = []
     #find a way to get track IDS
-    for track in chart[1:2]:
-        searchQuery = track[0] + ' ' + track[1]
+    for track in chart:
+        searchQuery = track[0]
         searchResults = sp.search(q=searchQuery, limit=1, type='track', market="US")
-# =============================================================================
-#         results = sp.search(q='artist:' + track[1] + ' track:' + track[0],
-#                                  type='track', limit=1)
-# =============================================================================
-        print(searchResults)
-
+        trackid_list.append(searchResults['tracks']['items'][0]['uri'])
+    return trackid_list
 
 spotify_search()
